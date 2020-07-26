@@ -1,0 +1,7 @@
+# The API key variable is stored and loaded from here | you may specify it in the following way: API_KEY=...
+var_for_api.txt
+
+.env
+
+
+
