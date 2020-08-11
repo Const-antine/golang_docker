@@ -1,0 +1,92 @@
+---
+
+- name: Install the mongo-api app as well as the mongo-db
+  hosts: all
+  connection: local
+  vars: 
+    image: localhost:5000/mongo-api:1.3
+    image_db: postgres:9.6.18  
+    db_port: 5434
+    app_port: 30080
+
+    API_KEY: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          66373330313838376366393865346232613837313035373363383464363166393533616335303664
+          3962363830393964613131383939343333383836633838380a643365626637663537653236343762
+          63626666623337666536333563323866376536386437643030666631373534373330376362636138
+          3631303730643530390a633935333432636331666164663936303536616135336536623433666561
+          66643335356230373062326134633630626535353931393435643364363163376662383463616334
+          3536333638633964396635656661306531356230343063313264
+    POSTGRES_DB: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          37333333396239623735346261323634623136646531653137353834383232383732346161353765
+          3436333663303331666665343830383935373632343336630a343936363065306237363037656265
+          34653137343033376364356364393666656538623735336264313461653761663839353565323439
+          6337386137356230650a346165323365633533653331383462666662633639356463313631383733
+          6266
+
+    POSTGRES_PASSWORD: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          66326165373936346639346133613437383235633930326234383963663134303833643634396261
+          3565353432336137343431333236636236353561363463370a613537383031393734336233346266
+          33356135316665346663643834663231643461363263663862303831326261383535393866393436
+          6431353863373835340a386263393738633165333964323638646135363030313636333564646137
+          3564
+  tasks:
+  - name: Create a config for deployment on a mongo-api base
+    template:
+      src: ./templates/deployment.j2
+      dest: ./configs/deployment.yaml 
+      mode: 0640
+
+  - name: Create a config gor service for mongo-api
+    template:
+      src: ./templates/service.j2
+      dest: ./configs/service.yaml 
+      mode: 0640
+
+  - name: Create a config for deployment on mongoDB base 
+    template:
+      src: ./templates/deployment-db.j2
+      dest: ./configs/deployment-db.yaml
+      mode: 0640
+
+  - name: Create a config for service for mongoDB
+    template:
+      src: ./templates/service-db.j2
+      dest: ./configs/service-db.yaml
+      mode: 0640
+
+
+  - name: Create a deployment on mongo-api-db base
+    k8s:
+      state: present
+      src: ./configs/deployment-db.yaml
+      wait: yes
+      wait_timeout: 100
+      wait_condition:
+        type: Progressing
+        status: yes
+        reason: NewReplicaSetAvailable
+
+
+
+  - name: Create a service for mongoDB
+    k8s:
+      state: present
+      src: ./configs/service-db.yaml 
+
+  - name: Create a deployment on mongo-api base
+    k8s:
+      state: present
+      src: ./configs/deployment.yaml
+
+  - name: Create a service for mongo-api
+    k8s:
+      state: present
+      src: ./configs/service.yaml
+
+
+
+
+
