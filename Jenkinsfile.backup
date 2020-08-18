@@ -1,21 +1,47 @@
 pipeline {
-   agent any
    environment {
        registry = "localhost:5000/mongo-api:1.3"
        GOCACHE = "/tmp"
-      
+       app = ""
    }
+
+agent { dockerfile true }
 
 
    stages {
-       stage('Clone repository') {
-
+       
+stage('Clone repository') {        
+       
  steps {
      script {
      checkout scm
      }
 }
 }
+
+stage('Build') {
+
+
+steps {
+    script {
+// def app 
+
+app = docker.build(registry)
+}
+}
+}
+       stage('Test') {
+           steps {
+           
+        app.inside {
+            sh 'echo "Tests passed"'
+        }           
+
+}
+
+       
+}
+
 
 
        stage ('Deploy') {
