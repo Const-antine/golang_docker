@@ -22,7 +22,7 @@ pipeline {
          steps {
             sh "ls -la"
          }
-
+      }
 
        stage ('Deploy') {
 
