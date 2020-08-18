@@ -16,6 +16,12 @@ pipeline {
      }
 }
 }
+      
+      
+      stage ('Test') {
+         steps {
+            sh "ls -la"
+         }
 
 
        stage ('Deploy') {
