@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-cicd-db-deployment
+  namespace: default
+  labels:
+    app: go-cicd-db
+spec:
+  replicas: 
+  selector:
+    matchLabels:
+      app: go-cicd-db
+  template:
+    metadata:
+      labels:
+        app: go-cicd-db
+    spec:
+      containers:
+      - name: mygolang-app-db
+        image: "{{ image_db }}"
+        env:
+        - name: POSTGRES_DB
+          value: "{{ POSTGRES_DB }}"
+        - name: POSTGRES_PASSWORD
+          value: "{{ POSTGRES_PASSWORD }}"
+          
+

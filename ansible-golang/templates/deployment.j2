@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-cicd-deployment
+  namespace: default
+  labels:
+    app: go-cicd
+spec:
+  replicas: 
+  selector:
+    matchLabels:
+      app: go-cicd
+  template:
+    metadata:
+      labels:
+        app: go-cicd
+    spec:
+      containers:
+      - name: mygolang-app
+        image: "{{ image }}"
+        env:
+        - name: API_KEY
+          value: {{ API_KEY }} 
+        - name: PORT
+          value: "{{ app_port }}"
+ 

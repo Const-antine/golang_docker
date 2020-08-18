@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: go-cicd-svc
+  namespace: default
+spec:
+  selector:
+    app: go-cicd
+  ports:
+    - protocol: TCP
+      port: {{ app_port }} 
+      nodePort: {{ app_port }}
+  type: NodePort

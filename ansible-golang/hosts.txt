@@ -1,0 +1,7 @@
+#host ansible_host=localhost image=localhost:5000/mongo-api:1.0
+
+
+[localhost]
+#127.0.0.1 image=localhost:5000/mongo-api:1.0   image_db=postgres:9.6.18
+
+127.0.0.1 
