@@ -21,6 +21,7 @@ pipeline {
       stage ('Test') {
          steps {
             sh "ls -la"
+            sh "pwd"
          }
       }
 
