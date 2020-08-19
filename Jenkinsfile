@@ -22,6 +22,7 @@ pipeline {
          steps {
             sh "ls -la"
             sh "pwd"
+            sh "ls ./ansible-golang/mongo-api-k8s.yaml"
          }
       }
 
